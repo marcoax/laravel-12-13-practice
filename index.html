@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Tracker · Laravel 12 → 13: Learn by Doing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #f5f2eb; --bg-2: #ede9df;
+    --ink: #1a1814; --ink-2: #4a4540; --ink-3: #8a8075;
+    --accent: #EB695B; --accent-deep: #c0392b;
+    --border: #d5cfc4; --ok: #3f7d5a; --warn: #c9772f;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 16px; }
+  body { background: var(--bg); color: var(--ink); font-family: 'Libre Baskerville', Georgia, serif; line-height: 1.6; padding-bottom: 3rem; }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 0 1.2rem; }
+
+  header { padding: 2.2rem 0 1.2rem; }
+  .kicker { font-family: 'JetBrains Mono', monospace; font-size: .66rem; text-transform: uppercase; letter-spacing: .2em; color: var(--accent); margin-bottom: .8rem; }
+  h1 { font-size: clamp(1.5rem, 5vw, 2.1rem); line-height: 1.1; font-weight: 700; letter-spacing: -.02em; margin-bottom: .8rem; }
+  h1 em { color: var(--accent); font-style: italic; }
+  .intro { font-size: .92rem; color: var(--ink-2); margin-bottom: 1.3rem; }
+  .intro code { font-family: 'JetBrains Mono', monospace; font-size: .82em; background: var(--bg-2); padding: .05rem .3rem; border-radius: 3px; border: 1px solid var(--border); }
+
+  .prog-meta { font-family: 'JetBrains Mono', monospace; font-size: .72rem; color: var(--ink-2); display: flex; justify-content: space-between; margin-bottom: .5rem; }
+  .prog-meta strong { color: var(--ok); }
+  .bar { height: 8px; background: var(--bg-2); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+  .bar-fill { height: 100%; background: var(--ok); width: 0%; transition: width .35s ease; }
+
+  .filters { display: flex; gap: .4rem; flex-wrap: wrap; margin: 1.4rem 0 .6rem; }
+  .fbtn { font-family: 'JetBrains Mono', monospace; font-size: .66rem; text-transform: uppercase; letter-spacing: .06em; padding: .35rem .7rem; border: 1px solid var(--border); border-radius: 20px; background: transparent; color: var(--ink-3); cursor: pointer; }
+  .fbtn.active { border-color: var(--accent); color: var(--accent); background: rgba(235,105,91,.08); }
+
+  .card { border: 1px solid var(--border); border-radius: 8px; background: rgba(255,255,255,.45); padding: 1rem 1.1rem; margin: .7rem 0; }
+  .card.done { opacity: .62; }
+  .card-top { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; margin-bottom: .5rem; }
+  .lz-n { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: .68rem; color: var(--accent); background: rgba(235,105,91,.1); border: 1px solid var(--accent); border-radius: 4px; padding: .2rem .5rem; white-space: nowrap; }
+  .lz-ver { font-family: 'JetBrains Mono', monospace; font-size: .68rem; color: var(--ink-3); }
+  .lz-chip { font-family: 'JetBrains Mono', monospace; font-size: .56rem; text-transform: uppercase; letter-spacing: .08em; padding: .14rem .42rem; border-radius: 3px; border: 1px solid var(--border); color: var(--ink-3); margin-left: auto; }
+  .lz-chip.sec { border-color: var(--accent); color: var(--accent); }
+  .lz-chip.brk { border-color: var(--accent-deep); color: var(--accent-deep); }
+  .lz-title { font-size: 1rem; font-weight: 700; line-height: 1.4; margin-bottom: .5rem; }
+  .card.done .lz-title { text-decoration: line-through; text-decoration-color: var(--ink-3); }
+  .lz-meta { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; margin-bottom: .75rem; }
+  .lz-eg { font-family: 'JetBrains Mono', monospace; font-size: .58rem; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-3); padding: .14rem .42rem; border: 1px dashed var(--border); border-radius: 3px; }
+  .lz-eg b { color: var(--ink-2); font-weight: 700; }
+  .lz-link { font-family: 'JetBrains Mono', monospace; font-size: .62rem; color: var(--accent-deep); text-decoration: none; border-bottom: 1px solid rgba(192,57,43,.3); }
+
+  .states { display: flex; gap: .4rem; flex-wrap: wrap; }
+  .sbtn { flex: 1; min-width: 92px; font-family: 'JetBrains Mono', monospace; font-size: .64rem; text-transform: uppercase; letter-spacing: .05em; padding: .45rem .3rem; border: 1px solid var(--border); border-radius: 5px; background: transparent; color: var(--ink-3); cursor: pointer; text-align: center; }
+  .sbtn.on-todo  { border-color: var(--ink-3); color: var(--ink); background: var(--bg-2); }
+  .sbtn.on-doing { border-color: var(--warn);  color: #fff; background: var(--warn); }
+  .sbtn.on-done  { border-color: var(--ok);    color: #fff; background: var(--ok); }
+
+  .note-toggle { font-family: 'JetBrains Mono', monospace; font-size: .62rem; color: var(--ink-3); background: none; border: none; cursor: pointer; margin-top: .6rem; padding: 0; text-decoration: underline; text-underline-offset: 2px; }
+  .note-box { margin-top: .55rem; display: none; }
+  .note-box.open { display: block; }
+  .note-box textarea { width: 100%; font-family: 'JetBrains Mono', monospace; font-size: .76rem; color: var(--ink); background: var(--bg-2); border: 1px solid var(--border); border-radius: 5px; padding: .5rem .6rem; resize: vertical; min-height: 56px; line-height: 1.5; }
+
+  footer { margin-top: 2rem; padding-top: 1.2rem; border-top: 1px solid var(--border); font-family: 'JetBrains Mono', monospace; font-size: .64rem; color: var(--ink-3); }
+  .foot-actions { display: flex; gap: .5rem; flex-wrap: wrap; margin-bottom: .8rem; }
+  .fa-btn { font-family: 'JetBrains Mono', monospace; font-size: .62rem; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-2); background: none; border: 1px solid var(--border); border-radius: 5px; padding: .35rem .7rem; cursor: pointer; }
+  .fa-btn.danger { color: var(--accent-deep); }
+  .foot-note { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+  .foot-note a { color: var(--accent-deep); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="kicker">// laravel 12 → 13 · learn by doing</div>
+    <h1>Where <em>you</em> are</h1>
+    <p class="intro">Twelve lessons, oldest first. Mark each one and note what it means <strong>for your project</strong>. Practice on your own codebase or a fresh Laravel app (<code>laravel new practice-app</code>). The lessons live in <code>/lessons</code>.</p>
+    <div class="prog-meta"><span id="progLabel">0 / 12 done</span><span id="progPct">0%</span></div>
+    <div class="bar"><div class="bar-fill" id="barFill"></div></div>
+  </header>
+
+  <div class="filters" id="filters"></div>
+  <div id="list"></div>
+
+  <footer>
+    <div class="foot-actions">
+      <button class="fa-btn" id="exportBtn">Export JSON</button>
+      <button class="fa-btn" id="importBtn">Import JSON</button>
+      <button class="fa-btn danger" id="resetBtn">Reset</button>
+      <input type="file" id="importFile" accept="application/json,.json" style="display:none" />
+    </div>
+    <div class="foot-note">
+      <span id="saveNote">Saved in your browser</span>
+      <span>Laravel 12 → 13 · learn by doing</span>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+var LESSONS = [
+  { id:1,  n:"01", ver:"12.x → 12.19",          type:"new", eg:"yes",   slug:"01-eloquent-casts",                 title:"Eloquent casts: AsHtmlString, AsCollection::of(), #[UseEloquentBuilder]" },
+  { id:2,  n:"02", ver:"12.4",                  type:"new", eg:"maybe", slug:"02-query-builder-pipelines",        title:"Query Builder Pipelines and shouldRun() in migrations" },
+  { id:3,  n:"03", ver:"12.19",                 type:"new", eg:"maybe", slug:"03-queue-fail-on-exception",        title:"Queue: FailOnException middleware" },
+  { id:4,  n:"04", ver:"12.40 · 12.41",         type:"new", eg:"yes",   slug:"04-duration-and-http-helpers",      title:"Duration helpers and HTTP Client throwUnless()" },
+  { id:5,  n:"05", ver:"12.45 · 12.46",         type:"new", eg:"yes",   slug:"05-array-collection-gate-helpers",  title:"Array, Collection and Gate helpers (Gate + enum)" },
+  { id:6,  n:"06", ver:"13.0",                  type:"brk", eg:"yes",   slug:"06-php-83-upgrade",                 title:"PHP 8.3 minimum: upgrade checklist" },
+  { id:7,  n:"07", ver:"13.0 → 13.8",           type:"new", eg:"maybe", slug:"07-php-attributes",                 title:"PHP Attributes in the framework" },
+  { id:8,  n:"08", ver:"13.0",                  type:"sec", eg:"yes",   slug:"08-csrf-prevent-request-forgery",   title:"CSRF: PreventRequestForgery and Sec-Fetch-Site" },
+  { id:9,  n:"09", ver:"13.0 → 13.x",           type:"new", eg:"maybe", slug:"09-queue-route-interruptible-cache",title:"Queue: route(), Interruptible, Cache::touch()" },
+  { id:10, n:"10", ver:"13.0",                  type:"new", eg:"yes",   slug:"10-ai-sdk",                         title:"Laravel AI SDK" },
+  { id:11, n:"11", ver:"13.0",                  type:"new", eg:"yes",   slug:"11-vector-search",                  title:"Vector search and semantic search" },
+  { id:12, n:"12", ver:"13.0",                  type:"new", eg:"maybe", slug:"12-json-api-resources",             title:"JSON:API Resources" }
+];
+
+var STORE_KEY = "laravel-12-13-practice";
+var FILTERS = [ {id:"all",label:"All"}, {id:"todo",label:"To do"}, {id:"doing",label:"In progress"}, {id:"done",label:"Done"} ];
+var TYPE_LABEL = { sec:"security", brk:"breaking", new:"new" };
+
+// storage: localStorage with in-memory fallback (for sandboxed previews)
+var mem = {};
+var store = {
+  get: function(k){ try { return localStorage.getItem(k); } catch(e){ return (k in mem) ? mem[k] : null; } },
+  set: function(k,v){ try { localStorage.setItem(k,v); } catch(e){ mem[k]=v; setSaveNote("Not persisted in this preview"); } }
+};
+function setSaveNote(t){ var el=document.getElementById("saveNote"); if(el) el.textContent=t; }
+
+var state = {};
+var activeFilter = "all";
+
+function defaults(){ var s={}; LESSONS.forEach(function(l){ s[l.id]={status:"todo",note:""}; }); return s; }
+
+function load(){
+  var raw = store.get(STORE_KEY);
+  try { state = raw ? JSON.parse(raw) : defaults(); } catch(e){ state = defaults(); }
+  LESSONS.forEach(function(l){ if(!state[l.id]) state[l.id]={status:"todo",note:""}; });
+  render();
+}
+function save(){ store.set(STORE_KEY, JSON.stringify(state)); }
+
+function setStatus(id,s){ state[id].status=s; save(); render(); }
+function setNote(id,v){ state[id].note=v; save(); }
+
+function counts(){ var c={all:LESSONS.length,todo:0,doing:0,done:0}; LESSONS.forEach(function(l){ c[state[l.id].status]++; }); return c; }
+
+function renderProgress(){
+  var c=counts(), pct=Math.round(c.done/LESSONS.length*100);
+  document.getElementById("barFill").style.width=pct+"%";
+  document.getElementById("progLabel").innerHTML="<strong>"+c.done+"</strong> / "+LESSONS.length+" done";
+  document.getElementById("progPct").textContent=pct+"%";
+}
+function renderFilters(){
+  var c=counts(), el=document.getElementById("filters"); el.innerHTML="";
+  FILTERS.forEach(function(f){
+    var b=document.createElement("button");
+    b.className="fbtn"+(activeFilter===f.id?" active":"");
+    b.textContent=f.label+" ("+c[f.id]+")";
+    b.onclick=function(){ activeFilter=f.id; render(); };
+    el.appendChild(b);
+  });
+}
+function renderList(){
+  var list=document.getElementById("list"); list.innerHTML="";
+  var vis=LESSONS.filter(function(l){ return activeFilter==="all"||state[l.id].status===activeFilter; });
+  if(vis.length===0){
+    var e=document.createElement("p");
+    e.style.cssText="font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--ink-3);padding:1.5rem 0;text-align:center;";
+    e.textContent="No lessons in this state.";
+    list.appendChild(e); return;
+  }
+  vis.forEach(function(l){
+    var st=state[l.id];
+    var card=document.createElement("div");
+    card.className="card"+(st.status==="done"?" done":"");
+    var chipCls = l.type==="sec" ? "sec" : (l.type==="brk" ? "brk" : "");
+    card.innerHTML =
+      '<div class="card-top">'+
+        '<span class="lz-n">Lesson '+l.n+'</span>'+
+        '<span class="lz-ver">'+l.ver+'</span>'+
+        '<span class="lz-chip '+chipCls+'">'+TYPE_LABEL[l.type]+'</span>'+
+      '</div>'+
+      '<div class="lz-title">'+l.title+'</div>'+
+      '<div class="lz-meta">'+
+        '<span class="lz-eg">eraCms example <b>'+l.eg+'</b></span>'+
+        '<a class="lz-link" href="lessons/'+l.slug+'.md">↗ open lesson</a>'+
+      '</div>'+
+      '<div class="states">'+
+        '<button class="sbtn '+(st.status==="todo"?"on-todo":"")+'" data-s="todo">To do</button>'+
+        '<button class="sbtn '+(st.status==="doing"?"on-doing":"")+'" data-s="doing">In progress</button>'+
+        '<button class="sbtn '+(st.status==="done"?"on-done":"")+'" data-s="done">Done</button>'+
+      '</div>'+
+      '<button class="note-toggle">'+(st.note?"✎ note":"+ add note")+'</button>'+
+      '<div class="note-box'+(st.note?" open":"")+'"><textarea placeholder="Relevant to my project? Notes, links...">'+(st.note||"")+'</textarea></div>';
+    card.querySelectorAll(".sbtn").forEach(function(btn){ btn.onclick=function(){ setStatus(l.id,btn.getAttribute("data-s")); }; });
+    var nb=card.querySelector(".note-box");
+    card.querySelector(".note-toggle").onclick=function(){ nb.classList.toggle("open"); };
+    card.querySelector("textarea").oninput=function(e){ setNote(l.id,e.target.value); };
+    list.appendChild(card);
+  });
+}
+function render(){ renderProgress(); renderFilters(); renderList(); }
+
+// Export / Import / Reset
+function exportJSON(){
+  var payload = { app:"laravel-12-13-practice", version:1, exportedAt:new Date().toISOString(), progress:state };
+  var blob = new Blob([JSON.stringify(payload,null,2)], {type:"application/json"});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement("a");
+  a.href=url; a.download="laravel-12-13-progress.json";
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+function importJSON(file){
+  var reader=new FileReader();
+  reader.onload=function(ev){
+    try {
+      var data=JSON.parse(ev.target.result);
+      var prog = data && data.progress ? data.progress : data;
+      var next=defaults();
+      LESSONS.forEach(function(l){ if(prog[l.id]){ next[l.id]={ status: prog[l.id].status||"todo", note: prog[l.id].note||"" }; } });
+      state=next; save(); render();
+      setSaveNote("Imported");
+    } catch(e){ alert("Could not read this file as valid progress JSON."); }
+  };
+  reader.readAsText(file);
+}
+
+document.getElementById("exportBtn").onclick=exportJSON;
+document.getElementById("importBtn").onclick=function(){ document.getElementById("importFile").click(); };
+document.getElementById("importFile").onchange=function(e){ if(e.target.files && e.target.files[0]) importJSON(e.target.files[0]); e.target.value=""; };
+document.getElementById("resetBtn").onclick=function(){
+  if(confirm("Reset all 12 lessons? Notes will be cleared.")){ state=defaults(); save(); render(); }
+};
+
+load();
+</script>
+</body>
+</html>
