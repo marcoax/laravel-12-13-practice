@@ -34,6 +34,23 @@ relevance questions) and match the existing lessons' tone.
 
 See `NOTES.md` for teaching preferences and `MISSION.md` for context.
 
+## Lesson lifecycle
+
+No lesson is left implicitly "done". At the **end of each lesson**, before moving on,
+capture completion and reflection with two writes (see ADR-0004):
+
+1. **Update `progress.json`** (git-ignored, at the repo root) — set the lesson's
+   `status` to `"done"` and store the learner's `note`. The file mirrors the tracker's
+   import payload: `{ "progress": { "<lesson-id>": { "status", "note" } } }`, keyed by the
+   numeric `id` in `index.html`'s `LESSONS` array (lesson 01 → `"1"`).
+2. **Write/update the learning record** `learning-records/NNNN-<slug>.md` — the narrative
+   outcome and key insight.
+
+`learning-records/` is the narrative source of truth; `progress.json` is the structured
+mirror the tracker UI reads. `index.html` auto-loads `progress.json` on open (graceful
+fallback when absent), so the browser tracker reflects the agent-written state without
+manual ticking. Keep the two writes in sync.
+
 ## Agent skills
 
 ### Issue tracker
