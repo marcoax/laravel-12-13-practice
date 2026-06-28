@@ -26,7 +26,7 @@ Use these terms in issues, ADRs, skill prompts, and code. Avoid the synonyms not
   authoritative source for "how to approach the lessons" at runtime. _Avoid:_ "settings",
   "preferences file". See ADR-0001.
 
-- **/teach-init** — the one-shot skill that interviews the learner and writes
+- **/lesson-init** — the one-shot skill that interviews the learner and writes
   `learning-config.md` (and `.claude/settings.local.json` for the output style). Run once
   per workspace. Distinct from `/teach`, which runs the lessons. See ADR-0002.
 
@@ -34,12 +34,12 @@ Use these terms in issues, ADRs, skill prompts, and code. Avoid the synonyms not
   ("does my project actually need this change?"). A **per-user choice**, not baked into
   the template. _Avoid:_ naming a specific project (e.g. eraCms) in tracked files. See ADR-0001.
 
-- **pedagogy fields** — the teaching-approach settings captured by `/teach-init` beyond
+- **pedagogy fields** — the teaching-approach settings captured by `/lesson-init` beyond
   the four essentials: `practice_default`, `quiz_format`, `deep_dive`, `branch_convention`.
   See ADR-0002.
 
 - **config binding** — the always-loaded instruction in `CLAUDE.md` that tells the agent
-  to treat `learning-config.md` as authoritative when present, and to suggest `/teach-init`
+  to treat `learning-config.md` as authoritative when present, and to suggest `/lesson-init`
   when absent. See ADR-0003.
 
 - **lesson lifecycle gate** — the end-of-lesson rule (in `CLAUDE.md`): before advancing,

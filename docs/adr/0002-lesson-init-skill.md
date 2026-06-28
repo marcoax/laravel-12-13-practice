@@ -1,4 +1,4 @@
-# ADR-0002 — `/teach-init` skill bootstraps the workspace
+# ADR-0002 — `/lesson-init` skill bootstraps the workspace
 
 **Status:** Accepted (2026-06-28)
 
@@ -11,7 +11,7 @@ hand-copied documented checklist. The setup is a distinct, one-time concern; mix
 
 ## Decision
 
-Add a dedicated **`/teach-init`** skill, run **once per workspace**. It interviews the
+Add a dedicated **`/lesson-init`** skill, run **once per workspace**. It interviews the
 learner one question at a time and writes `learning-config.md`. It captures the **four
 essentials plus the pedagogy fields**:
 
@@ -24,12 +24,12 @@ essentials plus the pedagogy fields**:
 5. Pedagogy fields: `practice_default` (concepts-only | throwaway-app | reference-project),
    `quiz_format` (recall | multiple-choice), `deep_dive` (on/off), `branch_convention`.
 
-`/teach` stays focused on running lessons; `/teach-init` only bootstraps.
+`/teach` stays focused on running lessons; `/lesson-init` only bootstraps.
 
 ## Consequences
 
 - A new skill folder is added (template-tracked, since the skill itself is generic).
 - Each question ships a recommended default so init is fast.
-- Re-running `/teach-init` should update the existing `learning-config.md`, not blindly
+- Re-running `/lesson-init` should update the existing `learning-config.md`, not blindly
   overwrite learner state.
 - `learning-config.md` becomes the schema other tooling reads (ADR-0003, ADR-0004).

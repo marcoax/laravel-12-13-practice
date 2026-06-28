@@ -19,8 +19,8 @@
 
 - **Binding lives in `CLAUDE.md`** (always loaded): "If `learning-config.md` exists, its
   values (language, reference project, pedagogy) are authoritative; if absent, suggest
-  `/teach-init`."
-- **Output style** is written by `/teach-init` to **`.claude/settings.local.json`**
+  `/lesson-init`."
+- **Output style** is written by `/lesson-init` to **`.claude/settings.local.json`**
   (git-ignored, per-user, higher precedence). The tracked `.claude/settings.json` is
   **neutralised** (its `outputStyle` removed, or left only as a soft template default).
 - **`model` is advisory only.** A file cannot force the CLI's model; `learning-config.md`

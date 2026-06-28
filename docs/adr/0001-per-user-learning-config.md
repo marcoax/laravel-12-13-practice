@@ -27,7 +27,7 @@ empty), `model` (advisory only — see ADR-0003), `language`, and the pedagogy f
 (`practice_default`, `quiz_format`, `deep_dive`, `branch_convention`).
 
 As part of adopting this, the eraCms mentions in `CLAUDE.md`/`README`/`NOTES.md` are
-**neutralised now** to "your reference project (set by `/teach-init`)".
+**neutralised now** to "your reference project (set by `/lesson-init`)".
 
 ## Consequences
 

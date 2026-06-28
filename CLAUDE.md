@@ -2,8 +2,9 @@
 
 A **content repo**, not a runnable app — no `composer.json`/`artisan`. It is a
 **Laravel 12 → 13** learning path run with the `/teach` skill: each lesson teaches a
-single change from 12.x to 13.x, assessed against the real project **eraCms**
-(Laravel 13 + Vue 3).
+single change from 12.x to 13.x, assessed against **your reference project** — a real
+codebase you choose at setup (`/lesson-init`), recorded in the git-ignored
+`learning-config.md`.
 
 ## Repo shape
 
@@ -22,7 +23,8 @@ single change from 12.x to 13.x, assessed against the real project **eraCms**
   as source/summary, but the teaching output is always HTML.
 - **Language:** project Markdown and documentation files are written in **English**; the
   chat conversation and the HTML lessons (learner-facing material) are in **Italian**.
-- Ground every lesson on eraCms as a concrete example, not as absolute truth.
+- Ground every lesson on **your reference project** (the `reference_project` in
+  `learning-config.md`) as a concrete example, not as absolute truth.
 - **Learn by Doing mode.** This project sets the `Learning` output style as the default in
   `.claude/settings.json`. When generating code that involves a design decision, set up the
   scaffolding and leave the key 2–10 lines to the user via a single `TODO(human)` block,
@@ -33,6 +35,17 @@ When editing a lesson brief, keep the format (what changed, why it matters, what
 relevance questions) and match the existing lessons' tone.
 
 See `NOTES.md` for teaching preferences and `MISSION.md` for context.
+
+## Config binding
+
+This repo is a neutral, forkable template; the learner's choices are per-user and
+git-ignored. If **`learning-config.md`** exists at the repo root, treat its values as
+**authoritative** — the reference project, the language split (chat/lessons vs docs),
+and the pedagogy fields (`practice_default`, `quiz_format`, `deep_dive`,
+`branch_convention`). The output style is enforced separately via
+`.claude/settings.local.json`; `model` is advisory only. If `learning-config.md` is
+**absent**, suggest running **`/lesson-init`** to create it. See
+`learning-config.example.md` for the schema and ADR-0001/0003.
 
 ## Lesson lifecycle
 
