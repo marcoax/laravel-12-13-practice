@@ -41,6 +41,12 @@ quiz_format: recall
 # Offer the optional "want to go deeper on a question?" invitation at lesson end.
 deep_dive: on
 
-# How per-lesson work is isolated, if at all. Free text; e.g. a branch-name pattern.
+# How per-lesson work is isolated, if at all. Free text; the branch-name pattern.
+# Consulted only when auto_branch is on.
 branch_convention: "one branch per lesson, e.g. lesson-NN-<slug>"
+
+# Whether each lesson opens a fresh branch cut from `main` (named via branch_convention).
+# /lesson-init only records this; /teach actually cuts the branch at lesson start.
+# TODO(human): define the auto_branch field(s) — pick the shape that fits the schema:
+#   the on/off toggle, its default, and how the base branch (main) is recorded.
 ```
