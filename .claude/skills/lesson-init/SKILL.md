@@ -46,13 +46,16 @@ essentials, then the pedagogy fields:
 | 5 | `practice_default` | `concepts-only` | `concepts-only` \| `throwaway-app` \| `reference-project`. |
 | 6 | `quiz_format` | `recall` | `recall` (open question → accordion answer) \| `multiple-choice`. |
 | 7 | `deep_dive` | `on` | Offer the optional "want to go deeper?" invite at lesson end. `on` \| `off`. |
-| 8 | `branch_convention` | `one branch per lesson, e.g. lesson-NN-<slug>` | Free text; how per-lesson work is isolated. |
+| 8 | `branch_convention` | `one branch per lesson, e.g. lesson-NN-<slug>` | Free text; the **branch-name pattern**. Consulted only when `auto_branch` is `on`. |
+| 9 | `auto_branch` | `on` (base `main`) | Ask whether each lesson should open a branch **from `main`**. `on` \| `off`. When `on`, the branch name follows `branch_convention` (the learner may override the pattern); when `off`, work stays on the current branch. `/lesson-init` only **records** the choice — it never creates the branch; `/teach` cuts it at lesson start. |
 
 ## Step 3 — Write `learning-config.md`
 
 Render the answers into the YAML block, preserving the structure and the explanatory
 comments from `learning-config.example.md` (the file is documentation outside the block,
-YAML inside). Keep the `# --- Essentials ---` / `# --- Pedagogy ---` sections.
+YAML inside). Keep the `# --- Essentials ---` / `# --- Pedagogy ---` sections. Persist
+`auto_branch` (with its base branch) next to `branch_convention` in the pedagogy section;
+do **not** create or switch any git branch here — `/lesson-init` only writes config.
 
 ## Step 4 — Write the output style to `.claude/settings.local.json`
 
