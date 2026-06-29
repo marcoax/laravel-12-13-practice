@@ -97,6 +97,19 @@ The tracker (`index.html`) saves automatically to your browser (`localStorage`).
 It also has **Export / Import**: download your progress as a `.json` file for
 backup, to move between devices, or to commit into your own fork.
 
+> **Heads-up — open it over HTTP, not `file://`.** The tracker auto-loads the
+> agent-written `progress.json` with `fetch()`. Browsers block `fetch` of local
+> files when the page is opened by double-click (`file://`), so it silently falls
+> back to `localStorage` and your `/teach` progress won't show. Serve the folder
+> instead:
+>
+> ```bash
+> php -S localhost:8000        # or: python3 -m http.server 8000
+> ```
+>
+> then open <http://localhost:8000/index.html>. (No server? Use the **Import**
+> button to load `progress.json` by hand.)
+
 ## Publishing the tracker (GitHub Pages)
 
 If you fork this and want the tracker live:
