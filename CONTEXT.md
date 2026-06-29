@@ -54,3 +54,46 @@ Use these terms in issues, ADRs, skill prompts, and code. Avoid the synonyms not
 - **progress tracker** — `index.html`, the standalone localStorage-backed progress UI.
   The agent cannot write its localStorage directly; it writes `progress.json` and the UI
   reflects it. _Avoid:_ "dashboard". See ADR-0004.
+
+- **/lesson-update** — the skill that discovers Laravel releases newer than the ones the
+  existing lessons cover and, on the learner's approval, generates a lesson for each
+  worthwhile one. Distinct from `/lesson-init` (one-shot setup) and `/teach` (runs lessons).
+  See ADR-0005.
+
+- **release (as unit)** — the unit of discovery, of state, and of output for
+  `/lesson-update`: one Laravel version → one lesson file aggregating that release's changes,
+  named by version. Dedup keys on the **version number**, never on a feature name (names
+  drift across sources). _Avoid:_ "(version, feature)" as a key, "topic matching". See
+  ADR-0005.
+
+- **editorial filter sources** — the blogs `/lesson-update` discovers releases from, as a
+  fallback chain: **laravel-news** (primary) → **Laravel Daily** (fallback). A release worth
+  a lesson is one *either* blog covered; a release neither covers is skipped silently
+  (accepted limitation — the gap is the filter). _Avoid:_ treating these as a complete
+  release index. See ADR-0005.
+
+- **changelog cross-check** — the Laravel changelog used by `/lesson-update` to confirm
+  version numbers and ordering and to enrich detail, but **not** as an independent discovery
+  source: it never surfaces a release on its own. See ADR-0005.
+
+- **laravel_version_scanned** — `/lesson-update` state: the highest version already examined on
+  the sources. The "how far I've looked" cursor; "new" means `> scanned`. Source of truth, not
+  derivable. See ADR-0006.
+
+- **laravel_version_covered** — `/lesson-update` state: the highest version that became a
+  lesson. A convenience **mirror** (derivable from the `origin: local` files), kept explicit as a
+  README anchor — _not_ a source of truth. _Avoid:_ treating it as authoritative state. See ADR-0006.
+
+- **lessons_skipped** — `/lesson-update` state: the set of versions the learner saw and declined,
+  so they are not re-proposed. "Declined" is not derivable from a version number. See ADR-0006.
+
+- **origin: local** — frontmatter on a `/lesson-update`-generated lesson marking "the learner
+  generated this" vs an upstream lesson. With `version:`, it drives collision detection (by
+  version, default **keep-both**; merge only on explicit opt-in). Generated lessons only — the 12
+  existing lessons are not retrofitted. See ADR-0006.
+
+- **background discovery sub-agent** — the read-only sub-agent `/lesson-update` spawns from the
+  lesson lifecycle gate (ADR-0004) on lesson completion: it scrapes the sources and returns
+  candidate releases (may update `scanned`/`last_checked`), but **never** generates lessons,
+  advances `covered`, or makes drafts. Background discovers and proposes; the foreground decides
+  and generates. See ADR-0007.
