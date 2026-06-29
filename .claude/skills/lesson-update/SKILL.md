@@ -75,6 +75,12 @@ Write each accepted lesson into `lessons/` from `lessons/_template.md`:
 - **YAML frontmatter (generated lessons only):** `version: <x.y.z>` and `origin: local`. Do **not**
   retrofit the 12 existing lessons (ADR-0006).
 - **Brief in the `language.docs` language (English).** HTML render stays a later `/teach` step.
+- **Generate in default mode, never Learn by Doing.** This workspace defaults to the `Learning`
+  output style, but lesson generation is *content authoring*, not co-writing application code on a
+  design decision — so the output style does not apply here. Emit **complete** briefs: **never leave
+  a `TODO(human)` block** or a placeholder line for the learner to fill. The Learn-by-Doing
+  interaction belongs to `/teach` (the *how* of teaching), not to `/lesson-update` (which authors the
+  source material). See ADR-0009.
 
 ### 6. Update state (only for what actually happened)
 - Advance `laravel_version_scanned` to the highest version examined.
