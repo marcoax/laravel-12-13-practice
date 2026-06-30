@@ -4,8 +4,6 @@ description: Menu launcher for this repo's Laravel 12→13 lessons. A thin wrapp
 argument-hint: "(optional) lesson number or slug, e.g. 3 or queue-fail-on-exception"
 ---
 
-# teach-lesson
-
 A **thin wrapper around `/teach`**. Its only job is to pick *which* lesson to run, then
 delegate the whole teaching session to `/teach`.
 
@@ -80,7 +78,7 @@ Resolve the exact path and delegate:
 `/teach` has `disable-model-invocation`, so you can't auto-call it via the Skill tool — present
 the resolved command for the learner to run (or follow `~/.agents/skills/teach/SKILL.md`
 directly). From there `/teach` owns the session (practice mode, scaffolding, `TODO(human)`,
-quiz) and the repo's lifecycle owns completion. teach-lesson's job ends at the hand-off.
+quiz).
 
 ## Optional argument
 
@@ -92,10 +90,3 @@ quiz) and the repo's lifecycle owns completion. teach-lesson's job ends at the h
   - If that lesson is already `done`, warn once (`⚠️ Lesson 03 is already done — re-running.`)
     then hand off anyway. No extra confirmation.
   - No match → fall back to the menu.
-
-## Don't
-
-- Don't write `progress.json`, `learning-config.md`, or any state file.
-- Don't reimplement teaching — that's all `/teach`.
-- Don't invent lessons absent from disk.
-- Don't assume a rigid progress format; parse tolerantly and use the all-to-do fallback.
