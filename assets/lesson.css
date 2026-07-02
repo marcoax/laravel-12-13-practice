@@ -204,6 +204,47 @@ th { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.05em; text-
   color: var(--ink);
 }
 
+/* ---- MCQ quiz widget (ADR-0012: discrimination beats only) ---- */
+.mcq {
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 0.6rem 1rem 0.9rem;
+  margin: 0.7rem 0;
+  background: #fff;
+}
+.mcq legend {
+  font-weight: 600;
+  font-size: 0.98rem;
+  padding: 0 0.4rem;
+}
+.mcq label {
+  display: block;
+  font-size: 0.93rem;
+  padding: 0.25rem 0;
+  cursor: pointer;
+}
+.mcq input[type="radio"] { accent-color: var(--accent); margin-right: 0.45rem; }
+.mcq .mcq-check {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  margin-top: 0.6rem;
+  padding: 0.3rem 0.9rem;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--code-bg);
+  cursor: pointer;
+}
+.mcq .mcq-check:hover { border-color: var(--accent); }
+.mcq .mcq-feedback {
+  margin: 0.6rem 0 0;
+  padding-top: 0.6rem;
+  border-top: 1px dashed var(--rule);
+  font-size: 0.93rem;
+}
+.mcq .mcq-feedback:empty { display: none; }
+.mcq .mcq-feedback.is-correct { color: var(--insight-rule); }
+.mcq .mcq-feedback.is-wrong { color: var(--accent); }
+
 /* ---- Footer nav ---- */
 .lesson-nav {
   display: flex;
@@ -227,6 +268,8 @@ th { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.05em; text-
   html { font-size: 11pt; }
   body { background: #fff; max-width: 100%; padding: 0; }
   .quiz details { break-inside: avoid; }
+  .mcq { break-inside: avoid; }
+  .mcq .mcq-check, .mcq .mcq-feedback { display: none; }
   .quiz details[open] summary::before,
   .quiz summary::before { content: ""; }
   a { color: var(--ink); border: none; }
